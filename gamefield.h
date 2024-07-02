@@ -21,12 +21,14 @@
 #include "numberwidget.h"
 #include "RectangleWidget.h"
 #include "token.h"
+#include "startwindow.h"
+#include "settingswindow.h"
 
 class GameField : public QWidget {
     Q_OBJECT
 
 public:
-    GameField(QWidget* parent = nullptr);
+    GameField(const QString& player1Name, const QString& player2Name, QWidget* parent = nullptr);
 
 protected:
     void paintEvent(QPaintEvent*);
@@ -40,6 +42,7 @@ private:
     QString getWinnerName() const;
     int getCurrentAttempt() const;
     void createMenu();
+    QString getPlayerNameByToken(Token* token) const;
 
     QGridLayout* layout;
     QGridLayout* m_layout;
@@ -61,7 +64,11 @@ private:
     QAction* aboutAction;
     QAction* saveResultsAction;
     QAction* exitAction;
+
     int m_currentAttempt = 0;
+
+    QString m_player1Name;
+    QString m_player2Name;
 
 
 private slots:

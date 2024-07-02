@@ -13,6 +13,7 @@ SOURCES += \
     main.cpp \
     numberwidget.cpp \
     rectanglewidget.cpp \
+    settingswindow.cpp \
     startwindow.cpp \
     token.cpp
 
@@ -20,6 +21,7 @@ HEADERS += \
     gamefield.h \
     numberwidget.h \
     rectanglewidget.h \
+    settingswindow.h \
     startwindow.h \
     token.h
 

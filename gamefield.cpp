@@ -1,6 +1,8 @@
 #include "gamefield.h"
 
-GameField::GameField(QWidget *parent) : QWidget(parent) {
+GameField::GameField(const QString& player1Name, const QString& player2Name, QWidget* parent)
+    : QWidget(parent), m_player1Name(player1Name), m_player2Name(player2Name)
+{
     setStyleSheet("background-color: #E5E5E5;");
 
     layout = new QGridLayout(this);
@@ -84,7 +86,7 @@ void GameField::rollDiceButtonClicked() {
     } else {
         moveToken(currentToken, diceRoll);
         currentToken = (currentToken == token1) ? token2 : token1;
-        currentPlayerLabel->setText(QString("Current player: %1").arg((currentToken == token1) ? "Yellow" : "Cyan"));
+        currentPlayerLabel->setText(QString("Current player: %1").arg((currentToken == token1) ? m_player1Name : m_player2Name));
     }
 }
 
@@ -106,7 +108,7 @@ void GameField::moveToken(Token* token, int steps) {
 }
 
 void GameField::showWinnerMessage() {
-    QString winnerColor = (winner == token1) ? "Yellow" : "Cyan";
+    QString winnerColor = (winner == token1) ? m_player1Name : m_player2Name;
     QMessageBox msgBox(this);
     msgBox.setWindowTitle("Game Over");
     msgBox.setText(QString("The %1 player won!").arg(winnerColor));
@@ -177,11 +179,21 @@ void GameField::updateUI() {
 }
 
 void GameField::rulesTriggered() {
-    QMessageBox::information(this, "Game Rules", "We have two colors: blue and light blue. They take turns moving around the playing field: yellow comes first, and then blue. Goal: reach the end of the field. When a chip lands on a red square, it moves 3 squares forward, on a gray one - 3 squares back, on a black one - to the beginning of the playing field, on a blue one - it makes an additional move.");
+    QMessageBox::information(this, "Game Rules", "We have two colors: blue and light blue. They take turns moving around the playing field: yellow player comes first, and then blue player. Goal: reach the end of the field. When a chip lands on a red square, it moves 3 squares forward, on a gray one - 3 squares back, on a black one - to the beginning of the playing field, on a blue one - it makes an additional move.");
 }
 
 void GameField::aboutTriggered() {
     QMessageBox::information(this, "About Game", "The game was created as part of computing practice by students of the Faculty of Applied Mathematics and Informatics of BSU. Project Github: https://github.com/vitmark-06/Game4.git");
+}
+
+QString GameField::getPlayerNameByToken(Token* token) const {
+    if (token == token1) {
+        return m_player1Name;
+    } else if (token == token2) {
+        return m_player2Name;
+    } else {
+        return "Unknown";
+    }
 }
 
 void GameField::saveResultsTriggered() {
@@ -189,20 +201,20 @@ void GameField::saveResultsTriggered() {
     if (file.open(QIODevice::Append | QIODevice::Text)) {
         QTextStream out(&file);
 
-        int currentAttempt = 0;
-
         QString winnerName;
         if (winner != nullptr) {
-            winnerName = winner->getName();
+            winnerName = getPlayerNameByToken(winner);
         } else {
             winnerName = "No Winner";
         }
 
-        out << "Attempt #" << currentAttempt << " - Winner: " << winnerName << "\n";
+        out << "Attempt #" << m_currentAttempt << " - Winner: " << winnerName << "\n";
         out << "Date: " << QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss") << "\n\n";
 
         file.close();
         QMessageBox::information(this, "Results Saved", "Game results have been saved.");
+
+        m_currentAttempt++;
     } else {
         QMessageBox::warning(this, "Error", "Unable to save game results.");
     }
@@ -217,5 +229,9 @@ QString GameField::getWinnerName() const {
 }
 
 void GameField::exitTriggered() {
-    QApplication::exit();
+    QMessageBox::StandardButton result = QMessageBox::question(this, "Exit Game", "Are you sure you want to exit the game?",
+                                                               QMessageBox::Yes | QMessageBox::No);
+    if (result == QMessageBox::Yes) {
+        QApplication::exit();
+    }
 }
