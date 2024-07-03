@@ -28,6 +28,7 @@ private slots:
 private:
     QString getPlayer1Name() const;
     QString getPlayer2Name() const;
+
     void setPlayer1Name(const QString& name);
     void setPlayer2Name(const QString& name);
 

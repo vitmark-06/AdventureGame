@@ -8,6 +8,7 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QAction>
+#include <QPainter>
 #include <QPushButton>
 #include <QTimer>
 #include <QVector>
@@ -19,7 +20,7 @@
 #include <QApplication>
 
 #include "numberwidget.h"
-#include "RectangleWidget.h"
+#include "circlewidget.h"
 #include "token.h"
 #include "startwindow.h"
 #include "settingswindow.h"
@@ -43,6 +44,7 @@ private:
     int getCurrentAttempt() const;
     void createMenu();
     QString getPlayerNameByToken(Token* token) const;
+    void updateTokenPosition();
 
     QGridLayout* layout;
     QGridLayout* m_layout;
@@ -70,6 +72,7 @@ private:
     QString m_player1Name;
     QString m_player2Name;
 
+    QTimer* timer;
 
 private slots:
     void rollDiceButtonClicked();

@@ -3,7 +3,10 @@
 GameField::GameField(const QString& player1Name, const QString& player2Name, QWidget* parent)
     : QWidget(parent), m_player1Name(player1Name), m_player2Name(player2Name)
 {
-    setStyleSheet("background-color: #E5E5E5;");
+    QPixmap backgroundImage("C:/Users/User/Desktop/Projects/ProgectQt/AdventureGame/image/space.jpg");
+    QPalette palette;
+    palette.setBrush(QPalette::Window, QBrush(backgroundImage));
+    setPalette(palette);
 
     layout = new QGridLayout(this);
     layout->setSpacing(20);
@@ -25,7 +28,7 @@ GameField::GameField(const QString& player1Name, const QString& player2Name, QWi
     h_layout->addWidget(rollDice);
 
     for (int i = 0; i < 35; i++) {
-        auto* rect = new RectangleWidget;
+        auto* rect = new CircleWidget;
         if (i == 0) {
             rect->setColor(Qt::white);
             rect->setNumber("Start");
@@ -64,6 +67,9 @@ GameField::GameField(const QString& player1Name, const QString& player2Name, QWi
     currentToken = token1;
 
     createMenu();
+
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &GameField::updateTokenPosition);
 }
 
 void GameField::paintEvent(QPaintEvent*) {
@@ -80,7 +86,7 @@ void GameField::rollDiceButtonClicked() {
     numberWidget->setNumber(diceRoll);
 
     int newPosition = (currentToken->getPosition() + diceRoll) % m_layout->count();
-    if (newPosition >= m_layout->count() - 1 || diceRoll >= m_layout->count() - 1 - currentToken->getPosition()) {
+    if (newPosition == m_layout->count() - 1 || diceRoll >= m_layout->count() - 1 - currentToken->getPosition()) {
         winner = currentToken;
         showWinnerMessage();
     } else {
@@ -91,19 +97,38 @@ void GameField::rollDiceButtonClicked() {
 }
 
 void GameField::moveToken(Token* token, int steps) {
-
-    RectangleWidget* prevRect = qobject_cast<RectangleWidget*>(m_layout->itemAt(token->getPosition())->widget());
+    int newPosition = (token->getPosition() + steps) % m_layout->count();
+    CircleWidget* prevRect = qobject_cast<CircleWidget*>(m_layout->itemAt(token->getPosition())->widget());
     prevRect->setColor(colors[token->getPosition() % colors.size()]);
 
-    int newPosition = (token->getPosition() + steps) % m_layout->count();
-    token->setPosition(newPosition);
-    RectangleWidget* newRect = qobject_cast<RectangleWidget*>(m_layout->itemAt(newPosition)->widget());
-    newRect->setColor(token->getColor());
+    token->setTargetPosition(newPosition);
+    if (token->getPosition() < newPosition) {
+        token->setDirection(Token::Direction::Forward);
+    } else {
+        token->setDirection(Token::Direction::Backward);
+    }
 
-    if (newPosition == m_layout->count() - 1) {
-        winner = token;
-        token->setPosition(m_layout->count() - 1);
-        showWinnerMessage();
+    timer->start(500);
+}
+
+void GameField::updateTokenPosition() {
+    if (currentToken->getPosition() != currentToken->getTargetPosition()) {
+        int currentPosition = currentToken->getPosition();
+        int targetPosition = currentToken->getTargetPosition();
+        int step = (currentToken->getDirection() == Token::Direction::Forward) ? 1 : -1;
+        currentToken->setPosition((currentPosition + step) % m_layout->count());
+        CircleWidget* prevRect = qobject_cast<CircleWidget*>(m_layout->itemAt(currentPosition)->widget());
+        prevRect->setColor(colors[currentPosition % colors.size()]);
+        CircleWidget* newRect = qobject_cast<CircleWidget*>(m_layout->itemAt(currentToken->getPosition())->widget());
+        newRect->setColor(currentToken->getColor());
+
+        if ((currentToken->getDirection() == Token::Direction::Forward && currentToken->getPosition() >= targetPosition) ||
+            (currentToken->getDirection() == Token::Direction::Backward && currentToken->getPosition() <= targetPosition)) {
+            currentToken->setPosition(targetPosition);
+            timer->stop();
+        }
+    } else {
+        timer->stop(); // Stop the timer if the token is already at the target position
     }
 }
 
@@ -164,7 +189,7 @@ void GameField::createMenu(){
 void GameField::updateUI() {
 
     for (int i = 0; i < m_layout->count(); i++) {
-        RectangleWidget* rect = qobject_cast<RectangleWidget*>(m_layout->itemAt(i)->widget());
+        CircleWidget* rect = qobject_cast<CircleWidget*>(m_layout->itemAt(i)->widget());
         rect->setColor(colors[i % colors.size()]);
     }
 
@@ -173,8 +198,8 @@ void GameField::updateUI() {
 
     update();
 }
-\
-    void GameField::newGameTriggered() {
+
+void GameField::newGameTriggered() {
     resetGame();
 }
 
