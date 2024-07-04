@@ -108,7 +108,25 @@ void GameField::moveToken(Token* token, int steps) {
         token->setDirection(Token::Direction::Backward);
     }
 
-    timer->start(500);
+    CircleWidget* currentRect = qobject_cast<CircleWidget*>(m_layout->itemAt(newPosition)->widget());
+    if (currentRect->getColor() == Qt::red) {
+        timer->start(700);
+        token->setTargetPosition((newPosition + 3) % m_layout->count());
+    } else if (currentRect->getColor() == Qt::gray) {
+        timer->start(700);
+        token->setTargetPosition((newPosition - 3) % m_layout->count());
+    } else if (currentRect->getColor() == Qt::blue) {
+        // Фишка попала на синий кружок
+        // Добавляем один дополнительный код
+        // Здесь нужно добавить дополнительную логику
+    } else if (currentRect->getColor() == Qt::black) {
+        // Фишка попала на черный кружок
+        // Возвращаем фишку в начало
+        timer->start(500);
+        token->setTargetPosition(0);
+    } else {
+        timer->start(500);
+    }
 }
 
 void GameField::updateTokenPosition() {
@@ -128,7 +146,7 @@ void GameField::updateTokenPosition() {
             timer->stop();
         }
     } else {
-        timer->stop(); // Stop the timer if the token is already at the target position
+        timer->stop();
     }
 }
 
@@ -233,6 +251,7 @@ void GameField::saveResultsTriggered() {
             winnerName = "No Winner";
         }
 
+        m_currentAttempt++;
         out << "Attempt #" << m_currentAttempt << " - Winner: " << winnerName << "\n";
         out << "Date: " << QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss") << "\n\n";
 

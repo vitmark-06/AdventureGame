@@ -2,7 +2,6 @@
 #define GAMEFIELD_H
 
 #include <QGridLayout>
-#include <QHBoxLayout>
 #include <QMessageBox>
 #include <QMainWindow>
 #include <QMenuBar>
@@ -49,11 +48,16 @@ private:
     QGridLayout* layout;
     QGridLayout* m_layout;
     QVBoxLayout* h_layout;
+
     QPushButton* rollDice;
     QPushButton* exitButton;
-    QVector<QColor> colors = {Qt::red, Qt::green, Qt::blue, Qt::green, Qt::green, Qt::gray, Qt::green, Qt::black, Qt::green};
+
+    QVector<QColor> colors =
+        {Qt::red, Qt::green, Qt::blue, Qt::green, Qt::green, Qt::gray, Qt::green, Qt::black, Qt::green};
+
     NumberWidget* numberWidget;
     QLabel* currentPlayerLabel;
+
     Token* token1;
     Token* token2;
     Token* currentToken;

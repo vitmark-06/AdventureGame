@@ -4,8 +4,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-SettingsWindow::SettingsWindow(QWidget* parent) : QDialog(parent)
-{
+SettingsWindow::SettingsWindow(QWidget* parent) : QDialog(parent) {
     setWindowTitle("Game Settings");
     setStyleSheet("background-color: #E5E5E5;");
     resize(600, 400);
@@ -51,28 +50,23 @@ SettingsWindow::SettingsWindow(QWidget* parent) : QDialog(parent)
     move(x, y);
 }
 
-void SettingsWindow::setPlayer1Name(const QString& name)
-{
+void SettingsWindow::setPlayer1Name(const QString& name) {
     m_player1NameEdit->setText(name);
 }
 
-void SettingsWindow::setPlayer2Name(const QString& name)
-{
+void SettingsWindow::setPlayer2Name(const QString& name) {
     m_player2NameEdit->setText(name);
 }
 
-QString SettingsWindow::getPlayer1Name() const
-{
+QString SettingsWindow::getPlayer1Name() const {
     return m_player1NameEdit->text();
 }
 
-QString SettingsWindow::getPlayer2Name() const
-{
+QString SettingsWindow::getPlayer2Name() const {
     return m_player2NameEdit->text();
 }
 
-void SettingsWindow::saveSettings()
-{
+void SettingsWindow::saveSettings() {
     emit settingsSaved(getPlayer1Name(), getPlayer2Name());
     accept();
 }

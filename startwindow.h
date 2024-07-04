@@ -34,6 +34,7 @@ private:
 
     QLineEdit* m_player1NameEdit;
     QLineEdit* m_player2NameEdit;
+
     QPushButton* m_startButton;
     QPushButton* m_highScoresButton;
     QPushButton* m_settingsButton;

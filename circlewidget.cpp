@@ -5,11 +5,11 @@ CircleWidget::CircleWidget(QWidget *parent): QWidget(parent) {
     setStyleSheet("background-color: transparent;");
 }
 
-QColor CircleWidget::getColor() const{
+QColor CircleWidget::getColor() const {
     return m_color;
 }
 
-void CircleWidget::setHalfColor(const QColor &color){
+void CircleWidget::setHalfColor(const QColor &color) {
     m_halfColor = color;
     update();
 }
@@ -23,13 +23,12 @@ void CircleWidget::setNumber(int number){
     update();
 }
 
-void CircleWidget::setNumber(const QString &number){
+void CircleWidget::setNumber(const QString &number) {
     m_number = number;
     update();
 }
 
-int CircleWidget::getNumber() const
-{
+int CircleWidget::getNumber() const {
     return m_number.toInt();
 }
 
@@ -37,7 +36,6 @@ void CircleWidget::paintEvent(QPaintEvent *) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-    // Draw a circle instead of a rectangle
     int diameter = qMin(width(), height()) - 20;
     painter.setBrush(m_color);
     painter.drawEllipse(QRect(width() / 2 - diameter / 2, height() / 2 - diameter / 2, diameter, diameter));

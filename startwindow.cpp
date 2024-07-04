@@ -65,8 +65,7 @@ StartWindow::StartWindow(QWidget *parent) : QWidget(parent) {
     move(x, y);
 }
 
-void StartWindow::startGame()
-{
+void StartWindow::startGame() {
     QString player1Name = getPlayer1Name();
     QString player2Name = getPlayer2Name();
     GameField* gameField = new GameField(player1Name, player2Name);
@@ -98,18 +97,15 @@ void StartWindow::exitGame() {
     }
 }
 
-QString StartWindow::getPlayer1Name() const
-{
+QString StartWindow::getPlayer1Name() const {
     return m_player1NameEdit->text();
 }
 
-QString StartWindow::getPlayer2Name() const
-{
+QString StartWindow::getPlayer2Name() const {
     return m_player2NameEdit->text();
 }
 
-void StartWindow::openSettings()
-{
+void StartWindow::openSettings() {
     m_settingsWindow = new SettingsWindow(this);
     m_settingsWindow->setPlayer1Name(m_player1NameEdit->text());
     m_settingsWindow->setPlayer2Name(m_player2NameEdit->text());
@@ -117,8 +113,7 @@ void StartWindow::openSettings()
     m_settingsWindow->exec();
 }
 
-void StartWindow::updatePlayerNames(const QString& player1Name, const QString& player2Name)
-{
+void StartWindow::updatePlayerNames(const QString& player1Name, const QString& player2Name) {
     m_player1NameEdit->setText(player1Name);
     m_player2NameEdit->setText(player2Name);
 }

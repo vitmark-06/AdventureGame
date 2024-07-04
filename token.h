@@ -7,28 +7,20 @@ class Token : public QWidget {
     Q_OBJECT
 
 public:
-    enum class Direction { Forward, Backward };
+    enum class Direction {
+        Forward,
+        Backward
+    };
+
     Token(QWidget* parent, const QColor& color);
     void setPosition(int position);
     int getPosition() const;
     QColor getColor() const;
     QString getName() const;
-
-    void setTargetPosition(int position) {
-        m_targetPosition = position;
-    }
-
-    int getTargetPosition() const {
-        return m_targetPosition;
-    }
-
-    void setDirection(Direction direction) {
-        m_direction = direction;
-    }
-
-    Direction getDirection() const {
-        return m_direction;
-    }
+    void setTargetPosition(int position);
+    int getTargetPosition() const;
+    void setDirection(Direction direction);
+    Direction getDirection() const;
 
 private:
     int currentPosition = 0;
